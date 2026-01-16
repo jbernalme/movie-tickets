@@ -1,6 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import 'tailwindcss';
 
-@import "tw-animate-css";
+@import 'tw-animate-css';
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -8,6 +9,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+    --font-bebas-neue: 'Bebas Neue', cursive;
+    --font-inter: 'Inter', sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono', monospace;
     --font-sans:
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
@@ -31,6 +35,9 @@
 
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-gold: var(--gold);
+    --color-gold-foreground: var(--gold-foreground);
 
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
@@ -72,6 +79,8 @@
     --primary-foreground: oklch(0.985 0 0);
     --secondary: oklch(0.97 0 0);
     --secondary-foreground: oklch(0.205 0 0);
+    --gold: oklch(0.8868 0.182186 95.3305);
+    --gold-foreground: oklch(0.145 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
     --accent: oklch(0.97 0 0);
@@ -98,16 +107,18 @@
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
+    --background: oklch(0.1448 0 0);
+    --foreground: oklch(0.9747 0.0021 17.19);
     --card: oklch(0.145 0 0);
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.145 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.985 0 0);
+    --primary: oklch(0.597 0.2382 28.62);
     --primary-foreground: oklch(0.205 0 0);
     --secondary: oklch(0.269 0 0);
     --secondary-foreground: oklch(0.985 0 0);
+    --gold: oklch(0.8868 0.182186 95.3305);
+    --gold-foreground: oklch(0.145 0 0);
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
     --accent: oklch(0.269 0 0);
