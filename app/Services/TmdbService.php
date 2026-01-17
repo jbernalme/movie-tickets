@@ -18,52 +18,6 @@ class TmdbService
         $this->baseUrl = config('services.tmdb.url');
     }
 
-    public function getNowPlayingMovies()
-    {
-        $responses = Http::pool(
-            fn(Pool $pool) => [
-                $pool
-                    ->as('trendingMovie')
-                    ->withToken($this->apiKey)
-                    ->get("{$this->baseUrl}/trending/movie/week", [
-                        'language' => $this->language,
-                    ]),
-                $pool
-                    ->as('popularMovie')
-                    ->withToken($this->apiKey)
-                    ->get("{$this->baseUrl}/movie/popular", [
-                        'language' => $this->language,
-                    ]),
-                $pool
-                    ->as('nowPlayingMovie')
-                    ->withToken($this->apiKey)
-                    ->get("{$this->baseUrl}/movie/now_playing", [
-                        'language' => $this->language,
-                    ]),
-                $pool
-                    ->as('topRatedMovie')
-                    ->withToken($this->apiKey)
-                    ->get("{$this->baseUrl}/movie/top_rated", [
-                        'language' => $this->language,
-                    ]),
-                $pool
-                    ->as('genres')
-                    ->withToken($this->apiKey)
-                    ->get("{$this->baseUrl}/genre/movie/list", [
-                        'language' => $this->language,
-                    ]),
-            ],
-        );
-
-        $mapped = Arr::map($responses, function ($value, $key) {
-            return $key === 'genres'
-                ? $value->json()['genres']
-                : $value->json();
-        });
-
-        return $mapped;
-    }
-
     public function buildTrendingRequest($pool)
     {
         return $pool
