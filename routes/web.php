@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -14,9 +15,7 @@ Route::get('/', function () {
     return Inertia::render('home');
 })->name('home');
 
-Route::get('movies', function () {
-    return Inertia::render('movies');
-})->name('movies');
+Route::get('movies', [HomeController::class, 'index'])->name('movies');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

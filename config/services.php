@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Third Party Services
@@ -35,4 +34,8 @@ return [
         ],
     ],
 
+    'tmdb' => [
+        'url' => env('TMDB_URL'),
+        'token' => env('TMDB_TOKEN'),
+    ],
 ];
