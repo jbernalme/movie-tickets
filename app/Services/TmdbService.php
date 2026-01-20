@@ -23,6 +23,7 @@ class TmdbService
         return $pool
             ->as('trending')
             ->withToken($this->apiKey)
+            ->withQueryParameters(['language' => $this->language])
             ->get("{$this->baseUrl}/trending/movie/week");
     }
 
@@ -31,6 +32,7 @@ class TmdbService
         return $pool
             ->as('now_playing')
             ->withToken($this->apiKey)
+            ->withQueryParameters(['language' => $this->language])
             ->get("{$this->baseUrl}/movie/now_playing");
     }
     public function buildUpcomingRequest($pool)
@@ -38,6 +40,7 @@ class TmdbService
         return $pool
             ->as('upcoming')
             ->withToken($this->apiKey)
+            ->withQueryParameters(['language' => $this->language])
             ->get("{$this->baseUrl}/movie/upcoming");
     }
     public function buildGenresRequest($pool)
@@ -45,6 +48,21 @@ class TmdbService
         return $pool
             ->as('genres')
             ->withToken($this->apiKey)
+            ->withQueryParameters(['language' => $this->language])
             ->get("{$this->baseUrl}/genre/movie/list");
+    }
+
+    public function createGenresMap(array $genres): array
+    {
+        return collect($genres)->pluck('name', 'id')->toArray();
+    }
+
+    public function getGenreNames(array $genreIds, array $genresMap): array
+    {
+        return collect($genreIds)
+            ->map(fn($id) => $genresMap[$id] ?? null)
+            ->filter()
+            ->values()
+            ->toArray();
     }
 }

@@ -11,7 +11,7 @@ export default function MainLayout({ children, breadcrumbs }: MainLayoutProps) {
     return (
         <div>
             <MainHeaderLayout breadcrumbs={breadcrumbs} />
-            <h1>MainLayout</h1>
+
             {children}
         </div>
     );

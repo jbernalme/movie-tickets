@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MovieController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -11,11 +12,13 @@ Route::get('/welcome', function () {
     ]);
 })->name('welcome');
 
-Route::get('/', function () {
-    return Inertia::render('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('movies', [HomeController::class, 'index'])->name('movies');
+Route::get('movies', [MovieController::class, 'index'])->name('movies');
+
+Route::get('movies/{movie}/{slug}', [MovieController::class, 'show'])->name(
+    'movie.show',
+);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

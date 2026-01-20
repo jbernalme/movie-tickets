@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\Models\Movie;
+use Inertia\Response;
 use App\Data\MovieData;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-    public function index(TmdbService $tmdbService)
+    public function index(TmdbService $tmdbService): Response
     {
         $movies = Cache::remember('home_movies', 3600, function () use (
             $tmdbService,
@@ -26,12 +27,26 @@ class HomeController extends Controller
                     $tmdbService->buildGenresRequest($pool),
                 ],
             );
+
+            $genresData = $movies['genres']->successful()
+                ? $movies['genres']->json()['genres']
+                : [];
+
+            $genresMap = $tmdbService->createGenresMap($genresData);
+
             return [
-                'trending' => $this->formatMovieResponse($movies['trending']),
+                'trending' => $this->formatMovieResponse(
+                    $movies['trending'],
+                    $genresMap,
+                ),
                 'now_playing' => $this->formatMovieResponse(
                     $movies['now_playing'],
+                    $genresMap,
                 ),
-                'upcoming' => $this->formatMovieResponse($movies['upcoming']),
+                'upcoming' => $this->formatMovieResponse(
+                    $movies['upcoming'],
+                    $genresMap,
+                ),
                 'genres' => $movies['genres']->successful()
                     ? $movies['genres']->json()['genres']
                     : [],
@@ -41,8 +56,10 @@ class HomeController extends Controller
         return Inertia::render('home', ['movies' => $movies]);
     }
 
-    private function formatMovieResponse($response): array
-    {
+    private function formatMovieResponse(
+        $response,
+        array $genresMap = [],
+    ): array {
         if (!$response->successful()) {
             return [
                 'results' => [],
@@ -56,7 +73,7 @@ class HomeController extends Controller
 
         return [
             'results' => array_map(
-                fn($movie) => MovieData::fromTmdb($movie),
+                fn($movie) => MovieData::fromTmdb($movie, $genresMap),
                 $data['results'] ?? [],
             ),
             'page' => $data['page'] ?? 1,
