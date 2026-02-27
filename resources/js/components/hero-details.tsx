@@ -1,16 +1,16 @@
 import { Icon } from '@/components/icon';
 import Tag from '@/components/tag';
-import { Movie } from '@/types/movie';
+import { MovieDetails } from '@/types/movie';
 import { Ticket } from 'lucide-react';
 import GenresTag from './genres-tag';
 import { Button } from './ui/button';
 
-export default function Hero({
+export default function HeroDetails({
     imgPath,
     movie,
 }: {
     imgPath: string;
-    movie: Movie;
+    movie: MovieDetails;
 }) {
     return (
         <section className="relative h-[calc(100vh-64px)] overflow-hidden bg-amber-300">
@@ -76,48 +76,3 @@ export default function Hero({
         </section>
     );
 }
-
-// export default function Hero({
-//     children,
-//     imgPath,
-// }: {
-//     children?: React.ReactNode;
-//     imgPath: string;
-// }) {
-//     return (
-//         <section className="relative h-[calc(100vh-64px)] overflow-hidden bg-amber-300">
-//             <picture>
-//                 <source
-//                     className="h-full w-full object-cover"
-//                     srcSet={imgPath}
-//                     type=""
-//                     media=""
-//                 />
-//                 <source
-//                     className="h-full w-full object-cover"
-//                     srcSet=""
-//                     type=""
-//                     media=""
-//                 />
-//                 <img
-//                     className="h-full w-full object-cover"
-//                     src={imgPath}
-//                     alt=""
-//                     loading="eager"
-//                 />
-//             </picture>
-//             <div
-//                 className="absolute inset-0"
-//                 style={{
-//                     background:
-//                         'linear-gradient(0deg,rgba(10, 10, 10, 1) 5%, rgba(0, 0, 0, 0) 100%)',
-//                 }}
-//             />
-//             <div className="absolute inset-0 container mx-auto flex flex-col justify-center gap-2">
-//                 <div className="flex max-w-[60%] flex-col gap-4">
-//                     {children}
-//                 </div>
-//             </div>
-//         </section>
-//     );
-// }

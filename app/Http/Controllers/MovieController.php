@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use Inertia\Inertia;
 use App\Models\Movie;
 use Illuminate\Http\Request;
+use App\Services\TmdbService;
+use App\Data\MovieDetailsData;
+use App\Data\ScreeningsByMonthData;
 
 class MovieController extends Controller
 {
+    public function __construct(private TmdbService $tmdbService) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -34,9 +41,28 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie)
+    public function show(string $movieId)
     {
-        dd($movie);
+        $movie = Movie::with([
+            'screenings' => function ($query) {
+                $query
+                    ->where('status', '!=', 'finished')
+                    ->orderBy('start_time');
+            },
+        ])->findOrFail($movieId);
+
+        $screenForMonth = ScreeningsByMonthData::fromScreeningsCollection(
+            $movie->screenings,
+        );
+
+        dump($screenForMonth);
+
+        $movieTmdb = $this->tmdbService->getMovie($movieId);
+
+        return Inertia::render('movie/show', [
+            'movie' => MovieDetailsData::from($movieTmdb),
+            'screenings' => $screenForMonth,
+        ]);
     }
 
     /**

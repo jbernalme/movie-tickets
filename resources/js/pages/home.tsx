@@ -22,12 +22,12 @@ interface HomePageProps {
 }
 
 export default function Home({ movies }: HomePageProps) {
-    console.log(movies.upcoming.results[0].genres);
+    console.log(movies.upcoming.results[0]);
     return (
         <MainLayout breadcrumbs={breadcrumbs}>
             <Hero
                 imgPath={movies.trending.results[1].backdrop_path}
-                movie={movies.upcoming.results[1]}
+                movie={movies.trending.results[1]}
             />
 
             <section className="pb-20">

@@ -24,6 +24,12 @@ class DatabaseSeeder extends Seeder
         //     ]
         // );
 
-        $this->call([UserSeeder::class, HallSeeder::class, MovieSeeder::class]);
+        $this->call([
+            UserSeeder::class,
+            SeatTypeSeeder::class,
+            HallSeeder::class,
+            MovieSeeder::class,
+            ScreeningSeeder::class,
+        ]);
     }
 }

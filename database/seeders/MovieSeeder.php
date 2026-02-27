@@ -15,12 +15,14 @@ class MovieSeeder extends Seeder
     {
         if (Movie::count() === 0) {
             Movie::create([
+                'id' => 438631,
                 'title' => 'Dune',
                 'slug' => 'dune',
                 'description' => 'Descripción de Dune',
                 'poster' => 'poster_dune.jpg',
             ]);
             Movie::create([
+                'id' => 1218925,
                 'title' => 'Chainsaw man: Reze Arc',
                 'slug' => 'chainsaw-man-reze-arc',
                 'description' => 'Descripción de Chainsaw man: Reze Arc',

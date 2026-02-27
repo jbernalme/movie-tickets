@@ -7,7 +7,7 @@ export function MovieCard({ item }: { item: Movie }) {
         <figure
             className={`border-kiwi group relative overflow-hidden rounded-md border-2`}
         >
-            <Link href={show({ movie: 1, slug: 'test' })}>
+            <Link href={show({ movie: item.id, slug: item.slug })}>
                 <img
                     src={item.poster_thumbnail}
                     alt="poster"
@@ -16,7 +16,7 @@ export function MovieCard({ item }: { item: Movie }) {
             </Link>
             <footer className="absolute right-0 -bottom-full left-0 rounded-b-md px-4 py-2 transition-all duration-300 group-hover:bottom-0">
                 <span className="text-light text-md font-semibold select-none">
-                    {item.name}
+                    {item.title}
                 </span>
             </footer>
         </figure>

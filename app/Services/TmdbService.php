@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Arr;
-use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Facades\Http;
 
 class TmdbService
@@ -16,6 +14,23 @@ class TmdbService
     {
         $this->apiKey = config('services.tmdb.token');
         $this->baseUrl = config('services.tmdb.url');
+    }
+
+    public function getMovie($movieId): array
+    {
+        $imageLanguage = 'en,es,null';
+        $appendResponse = 'credits,videos,images';
+
+        /** @var \Illuminate\Http\Client\Response $response */
+        $response = Http::withToken($this->apiKey)
+            ->withQueryParameters([
+                'language' => $this->language,
+                'append_to_response' => $appendResponse,
+                'include_image_language' => $imageLanguage,
+            ])
+            ->get("{$this->baseUrl}/movie/{$movieId}");
+
+        return $response->json();
     }
 
     public function buildTrendingRequest($pool)

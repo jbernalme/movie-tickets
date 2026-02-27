@@ -11,16 +11,14 @@ class MovieData extends Data
     public function __construct(
         public int $id,
         public string $title,
-        public string $name,
         public string $slug,
         public ?string $overview,
         public string $backdrop_path,
         public string $poster_path,
         public string $poster_thumbnail,
-        public string $vote_average,
+        public int $vote_average,
         public string $release_date,
         public string $year,
-        public array $genre_ids,
         public array $genres,
     ) {}
 
@@ -40,6 +38,8 @@ class MovieData extends Data
                 $movie['poster_path']
             : 'https://dummyimage.com/220x330/20234f/7cdb29&text=No+Image';
 
+        $voteAverage = $movie['vote_average'] * 10;
+
         $releaseDate = $movie['release_date'] ?? null;
 
         $genreNames = collect($movie['genre_ids'] ?? [])
@@ -51,20 +51,18 @@ class MovieData extends Data
         return new self(
             id: $movie['id'],
             title: $movie['title'],
-            name: $movie['title'],
             slug: Str::slug($movie['title']),
             overview: $movie['overview'] ?? null,
             backdrop_path: $backdropPath,
             poster_path: $posterPath,
             poster_thumbnail: $posterThumbnail,
-            vote_average: round($movie['vote_average'] * 10) . '%',
+            vote_average: $voteAverage,
             release_date: $releaseDate
                 ? Carbon::parse($releaseDate)->format('M d, Y')
                 : 'n/a',
             year: $releaseDate
                 ? Carbon::parse($releaseDate)->format('Y')
                 : 'n/a',
-            genre_ids: $movie['genre_ids'] ?? [],
             genres: $genreNames,
         );
     }

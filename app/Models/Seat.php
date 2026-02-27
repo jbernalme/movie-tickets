@@ -9,12 +9,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Seat extends Model
 {
-    public function hall() : BelongsTo {
+    public function hall(): BelongsTo
+    {
         return $this->belongsTo(Hall::class);
     }
 
     public function detailsTicket(): BelongsToMany
     {
         return $this->belongsToMany(Ticket::class);
+    }
+
+    public function seatType(): BelongsTo
+    {
+        return $this->belongsTo(SeatType::class);
     }
 }

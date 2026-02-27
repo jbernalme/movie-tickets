@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -20,9 +19,14 @@ return new class extends Migration
             $table->foreignIdFor(Hall::class);
             $table->datetime('start_time');
             $table->datetime('end_time');
+            $table->decimal('base_price', 10, 2);
             $table->enum('format', ['2D', '3D', 'IMAX'])->default('2D');
-            $table->enum('audio', ['subtitles', 'dubbed'])->default('subtitles');
-            $table->enum('status', ['upcoming', 'ongoing', 'finished'])->default('upcoming');
+            $table
+                ->enum('audio', ['subtitles', 'dubbed'])
+                ->default('subtitles');
+            $table
+                ->enum('status', ['upcoming', 'ongoing', 'finished'])
+                ->default('upcoming');
             $table->timestamps();
         });
     }

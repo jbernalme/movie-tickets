@@ -4,9 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Seat;
 use Illuminate\Http\Request;
+use App\Models\Screening;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SeatController extends Controller
 {
+    public function select($slug, Screening $screening): Response
+    {
+        $screening->load('hall.seats.seatType');
+
+        $seatsByRows = $screening->hall->seats
+            ->groupBy('row')
+            ->map(
+                fn($rowSeats) => [
+                    'row' => $rowSeats->first()->row,
+                    'seats' => $rowSeats->sortBy('number')->values()->toArray(),
+                ],
+            )
+            ->values()
+            ->toArray();
+        // dump($seatsByRows);
+        return Inertia::render(
+            'seat/select',
+            compact('seatsByRows', 'screening'),
+        );
+    }
+
     /**
      * Display a listing of the resource.
      */

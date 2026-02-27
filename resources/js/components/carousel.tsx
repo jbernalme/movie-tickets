@@ -1,3 +1,4 @@
+import { ComponentType } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -8,7 +9,7 @@ import { Movie } from '../types/movie';
 
 interface CarouselProps {
     data: Movie[];
-    CardComponent: React.ComponentType<{ item: Movie }>;
+    CardComponent: ComponentType<{ item: Movie }>;
     autoplay?: boolean;
     navigation?: boolean;
     pagination?: boolean;
