@@ -66,6 +66,44 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Animaciones personalizadas */
+    --animate-price-highlight: price-highlight 0.6s ease;
+    --animate-shimmer: shimmer 3s infinite;
+    --animate-slide-in: slide-in 0.3s ease;
+
+    @keyframes price-highlight {
+        0%,
+        100% {
+            transform: scale(1);
+            color: #ef4444; /* red-500 */
+        }
+        50% {
+            transform: scale(1.05);
+            color: #4ade80; /* green-400 */
+        }
+    }
+
+    @keyframes shimmer {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    @keyframes slide-in {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 }
 
 :root {

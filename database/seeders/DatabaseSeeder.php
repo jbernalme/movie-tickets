@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             HallSeeder::class,
             MovieSeeder::class,
             ScreeningSeeder::class,
+            DiscountSeeder::class,
         ]);
     }
 }

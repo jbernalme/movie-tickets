@@ -39,3 +39,10 @@ export interface SeatRow {
     row: string;
     seats: Seat[];
 }
+
+export interface AppliedDiscount {
+    amount: number;
+    code: string;
+    type: 'percentage' | 'fixed';
+    total: number;
+}
