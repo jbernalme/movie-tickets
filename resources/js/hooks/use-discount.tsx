@@ -35,6 +35,8 @@ export function useDiscount() {
                     amount: response.data.discountData.amount,
                     code: response.data.discountData.code,
                     type: response.data.discountData.type,
+                    discount_amount: response.data.discount_amount,
+                    subtotal: response.data.subtotal,
                     total: response.data.total,
                 });
             } else {

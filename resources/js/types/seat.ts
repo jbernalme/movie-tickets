@@ -44,5 +44,7 @@ export interface AppliedDiscount {
     amount: number;
     code: string;
     type: 'percentage' | 'fixed';
+    discount_amount: number;
+    subtotal: number;
     total: number;
 }

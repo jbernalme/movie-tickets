@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Discount;
+use App\Services\DiscountService;
 use Illuminate\Http\Request;
 
 class DiscountController extends Controller
 {
+    public function __construct(private DiscountService $discountService) {}
+
     /**
      * Valida un código de descuento
      *
@@ -18,48 +21,37 @@ class DiscountController extends Controller
     {
         $request->validate([
             'code' => 'required|string',
-            'subtotal' => 'required|numeric',
+            'subtotal' => 'required|numeric|min:0',
         ]);
 
-        $discount = Discount::where('code', $request->code)->first();
+        $validDiscount = $this->discountService->getValidDiscount(
+            $request->code,
+        );
 
-        \Log::info('Discount validation', [
-            'code' => $request->code,
-            'discount' => $discount,
-        ]);
-
-        if ($discount) {
-            $isValid =
-                $discount->status === 'active' &&
-                $discount->usage_limit > $discount->used_count &&
-                $discount->expires_at > now();
-
-            if ($isValid) {
-                $total = $request->subtotal;
-                if ($discount->type === 'percentage') {
-                    $total = $total - ($total * $discount->amount) / 100;
-                } else {
-                    $total = $total - $discount->amount;
-                }
-            }
-
-            $total = max(0, $total);
-            \Log::info('Discount validation result', [
-                'valid' => $isValid,
-                'discountData' => $discount->only('code', 'type', 'amount'),
-                'total' => $total,
-            ]);
-
-            return response()->json([
-                'valid' => $isValid,
-                'discountData' => $discount->only('code', 'type', 'amount'),
-                'total' => $total,
-            ]);
+        if (!$validDiscount) {
+            return response()->json(
+                [
+                    'valid' => false,
+                    'message' => 'Código de descuento inválido o expirado',
+                ],
+                400,
+            );
         }
 
+        // Calcular total
+        $total = $this->discountService->applyDiscount(
+            $validDiscount,
+            $request->subtotal,
+        );
+
+        $total = $this->discountService->formatTotal($total);
+
         return response()->json([
-            'valid' => false,
-            'message' => 'Código de descuento inválido',
+            'valid' => true,
+            'discountData' => $validDiscount->only('code', 'type', 'amount'),
+            'subtotal' => $request->subtotal,
+            'discount_amount' => round($request->subtotal - $total, 2),
+            'total' => round($total, 2),
         ]);
     }
 

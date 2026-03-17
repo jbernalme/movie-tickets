@@ -5,9 +5,7 @@ import { AlertCircle, Check, X } from 'lucide-react';
 import { Icon } from './ui/icon';
 
 interface inputDiscountProps {
-    setDiscountCode: (code: string) => void;
     validateDiscount: (code: string, amount: number) => void;
-    discountCode: string;
     subtotal: number;
     isValidating: boolean;
     appliedDiscount: AppliedDiscount | null;
@@ -16,16 +14,14 @@ interface inputDiscountProps {
 }
 
 export default function InputDiscount({
-    setDiscountCode,
     validateDiscount,
-    discountCode,
     subtotal,
     isValidating,
     appliedDiscount,
     removeDiscount,
     error,
 }: inputDiscountProps) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, reset } = useForm({
         code: '',
     });
     const handleSubmit = (e: React.FormEvent) => {
@@ -98,6 +94,14 @@ export default function InputDiscount({
                                     : `-$${appliedDiscount.amount}`}
                             </span>
                         </div>
+                        {appliedDiscount.type === 'percentage' && (
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Descuento</span>
+                                <span className="font-jetbrains-mono font-bold text-red-500">
+                                    -${appliedDiscount.discount_amount}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </>
             )}
