@@ -120,8 +120,6 @@ class TicketController extends Controller
                 return $ticket;
             });
             return response()->json(['ticket' => $ticket]);
-
-            // return inertia('Checkout/Payment', ['ticket' => $ticket]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
