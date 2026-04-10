@@ -41,21 +41,23 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $movieId)
+    public function show(Movie $movie)
     {
-        $movie = Movie::with([
+        $movie->load([
             'screenings' => function ($query) {
                 $query
                     ->where('status', '!=', 'finished')
                     ->orderBy('start_time');
             },
-        ])->findOrFail($movieId);
+        ]);
 
         $screenForMonth = ScreeningsByMonthData::fromScreeningsCollection(
             $movie->screenings,
         );
 
-        $movieTmdb = $this->tmdbService->getMovie($movieId);
+        // dd($screenForMonth);
+
+        $movieTmdb = $this->tmdbService->getMovie($movie->tmdb_id);
 
         return Inertia::render('movie/show', [
             'movie' => MovieDetailsData::from($movieTmdb),
