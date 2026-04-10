@@ -26,7 +26,7 @@ class ScreeningSeeder extends Seeder
                 'status' => 'upcoming',
             ]);
             Screening::create([
-                'movie_id' => 1218925,
+                'movie_id' => 2,
                 'hall_id' => 1,
                 'start_time' => Carbon::create(2026, 10, 25, 19, 0, 0),
                 'end_time' => Carbon::create(2026, 10, 25, 21, 30, 0),
@@ -36,7 +36,7 @@ class ScreeningSeeder extends Seeder
                 'status' => 'upcoming',
             ]);
             Screening::create([
-                'movie_id' => 1218925,
+                'movie_id' => 2,
                 'hall_id' => 1,
                 'start_time' => Carbon::create(2026, 10, 25, 22, 0, 0),
                 'end_time' => Carbon::create(2026, 10, 32, 24, 30, 0),
@@ -46,7 +46,7 @@ class ScreeningSeeder extends Seeder
                 'status' => 'upcoming',
             ]);
             Screening::create([
-                'movie_id' => 1218925,
+                'movie_id' => 2,
                 'hall_id' => 1,
                 'start_time' => Carbon::create(2026, 11, 5, 19, 0, 0),
                 'end_time' => Carbon::create(2026, 11, 5, 21, 30, 0),
@@ -56,7 +56,7 @@ class ScreeningSeeder extends Seeder
                 'status' => 'upcoming',
             ]);
             Screening::create([
-                'movie_id' => 1218925,
+                'movie_id' => 2,
                 'hall_id' => 1,
                 'start_time' => Carbon::create(2026, 11, 5, 20, 0, 0),
                 'end_time' => Carbon::create(2026, 11, 5, 22, 30, 0),
@@ -66,7 +66,7 @@ class ScreeningSeeder extends Seeder
                 'status' => 'upcoming',
             ]);
             Screening::create([
-                'movie_id' => 1218925,
+                'movie_id' => 2,
                 'hall_id' => 1,
                 'start_time' => Carbon::create(2026, 11, 5, 19, 0, 0),
                 'end_time' => Carbon::create(2026, 11, 5, 21, 30, 0),
