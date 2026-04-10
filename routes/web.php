@@ -2,10 +2,24 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\ShoppingCartController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+
+Route::get('/test', function () {
+    abort(500);
+    throw new \App\Exceptions\PaymentPlatformNotConfiguredException(
+        'Tarjeta rechazada',
+    );
+});
+
+Route::get('/test-env', function () {
+    dd(app()->environment(), config('app.env'), env('APP_ENV'));
+});
 
 Route::get('/welcome', function () {
     return Inertia::render('welcome', [
@@ -31,5 +45,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/reservations', [ReservationController::class, 'index'])
+    ->middleware('auth')
+    ->name('reservations.index');
+
+// rutas payment
+Route::get('payment/approval', [PaymentController::class, 'approval'])->name(
+    'payment.approval',
+);
+Route::get('payment/cancelled', [PaymentController::class, 'cancelled'])->name(
+    'payment.cancelled',
+);
+Route::get('payment/pending', [PaymentController::class, 'pending'])->name(
+    'payment.pending',
+);
 
 require __DIR__ . '/settings.php';

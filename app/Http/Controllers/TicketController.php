@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ReleaseExpiredReservation;
 use App\Models\Screening;
 use App\Models\Seat;
 use App\Models\Ticket;
@@ -37,8 +38,8 @@ class TicketController extends Controller
     {
         $validated = $request->validate([
             'screening_id' => 'required|exists:screenings,id',
-            'seat_ids' => 'required|array',
-            'seat_ids.*' => 'exists:seats,id',
+            'seat_ids' => 'required|array|min:1|max:10',
+            'seat_ids.*' => 'required|integer|exists:seats,id',
             'discount_code' => 'nullable|string|max:20',
         ]);
 
@@ -53,6 +54,13 @@ class TicketController extends Controller
                     ->lockForUpdate()
                     ->get();
 
+                // Validar que TODOS los seats solicitados existen en este hall
+                if ($seats->count() !== count($validated['seat_ids'])) {
+                    throw new \Exception(
+                        'Uno o más asientos no pertenecen a esta sala',
+                    );
+                }
+
                 // Validar disponibilidad
                 if ($seats->contains('status', 'unavailable')) {
                     throw new \Exception('Asientos no disponibles');
@@ -63,26 +71,31 @@ class TicketController extends Controller
                         $screening->base_price;
                 });
 
-                if (isset($validated['discount_code'])) {
+                $total = $subtotal;
+                $validDiscount = null;
+
+                if (!empty($validated['discount_code'])) {
                     $validDiscount = $this->discountService->getValidDiscount(
                         $validated['discount_code'],
                     );
+
                     if ($validDiscount) {
                         $total = $this->discountService->applyDiscount(
                             $validDiscount,
                             $subtotal,
                         );
                     }
-                } else {
-                    $total = $subtotal;
-                    $validDiscount = null;
                 }
 
-                Log::info('validDiscount', [
-                    'validDiscount' => $validDiscount,
+                Log::info('Discount applied', [
+                    'code' => $validated['discount_code'] ?? null,
+                    'valid' => $validDiscount !== null,
+                    'subtotal' => $subtotal,
+                    'total' => $total,
                 ]);
 
                 // Crear ticket
+                // TODO: Usar el user_id del usuario autenticado
                 $ticket = Ticket::create([
                     'user_id' => 1,
                     'screening_id' => $validated['screening_id'],
@@ -98,7 +111,9 @@ class TicketController extends Controller
                         $total,
                     ),
                     'status' => 'pending',
-                    'expires_at' => now()->addMinutes(10),
+                    'expires_at' => now()->addMinutes(
+                        config('tickets.expiration_minutes'),
+                    ),
                     'used_at' => null,
                 ]);
 
@@ -117,6 +132,15 @@ class TicketController extends Controller
                     ->whereIn('id', $validated['seat_ids'])
                     ->update(['status' => 'unavailable']);
 
+                // Dispatch job con delay para liberación automática
+                ReleaseExpiredReservation::dispatch(
+                    $ticket->id,
+                    $validated['seat_ids'],
+                )
+                    ->delay(
+                        now()->addMinutes(config('tickets.expiration_minutes')),
+                    )
+                    ->onQueue('reservations');
                 return $ticket;
             });
             return response()->json(['ticket' => $ticket]);

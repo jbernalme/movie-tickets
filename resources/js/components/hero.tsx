@@ -54,7 +54,7 @@ export default function Hero({
                         {movie.overview}
                     </span>
                     <div className="flex flex-col font-inter">
-                        <GenresTag genres={movie.genres} />
+                        <GenresTag genres={movie.genres.split(',')} />
                     </div>
                     <div className="flex gap-2">
                         <Button

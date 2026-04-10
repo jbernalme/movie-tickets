@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Data\MovieData;
 use Illuminate\Support\Facades\Http;
 
 class TmdbService
 {
     private $apiKey;
     private $baseUrl;
-    private $language = 'es-mx';
+    private $language = 'en-US';
 
     public function __construct()
     {
@@ -79,5 +80,29 @@ class TmdbService
             ->filter()
             ->values()
             ->toArray();
+    }
+
+    public function formatMovieResponse($response, array $genresMap = []): array
+    {
+        if (!$response->successful()) {
+            return [
+                'results' => [],
+                'page' => 1,
+                'total_pages' => 0,
+                'total_results' => 0,
+            ];
+        }
+
+        $data = $response->json();
+
+        return [
+            'results' => array_map(
+                fn($movie) => MovieData::fromTmdb($movie, $genresMap),
+                $data['results'] ?? [],
+            ),
+            'page' => $data['page'] ?? 1,
+            'total_pages' => $data['total_pages'] ?? 0,
+            'total_results' => $data['total_results'] ?? 0,
+        ];
     }
 }

@@ -32,7 +32,7 @@ import { cn, isSameUrl, resolveUrl } from '@/lib/utils';
 import { dashboard, movies } from '@/routes';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Bell, Menu, Search } from 'lucide-react';
+import { Bell, Menu, Search, Tickets } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 import { Input } from './ui/input';
@@ -53,6 +53,11 @@ const rightNavItems: NavItem[] = [
         title: 'Notificaciones',
         href: 'https://github.com/laravel/react-starter-kit',
         icon: Bell,
+    },
+    {
+        title: 'Reservas',
+        href: '/reservations',
+        icon: Tickets,
     },
 ];
 

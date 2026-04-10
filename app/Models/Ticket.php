@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Screening;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,5 +28,9 @@ class Ticket extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    public function screening(): BelongsTo
+    {
+        return $this->belongsTo(Screening::class);
     }
 }

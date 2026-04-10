@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             MovieSeeder::class,
             ScreeningSeeder::class,
             DiscountSeeder::class,
+            PaymentPlatformSeeder::class,
         ]);
     }
 }

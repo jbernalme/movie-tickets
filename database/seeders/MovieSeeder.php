@@ -15,18 +15,34 @@ class MovieSeeder extends Seeder
     {
         if (Movie::count() === 0) {
             Movie::create([
-                'id' => 438631,
+                'tmdb_id' => 438631,
                 'title' => 'Dune',
-                'slug' => 'dune',
-                'description' => 'Descripción de Dune',
-                'poster' => 'poster_dune.jpg',
+                'original_title' => 'Dune',
+                'overview' => 'Descripción de Dune',
+                'poster_path' => 'poster_dune.jpg',
+                'genres' => 'Ciencia ficción, Drama',
+                'release_date' => '2021-10-22',
+                'imdb_id' => 'tt1160419',
+                'runtime' => 155,
+                'tagline' => 'El destino de la humanidad está en juego',
+                'status' => 'Released',
+                'last_synced_at' => now(),
+                'needs_detail_sync' => false,
             ]);
             Movie::create([
-                'id' => 1218925,
+                'tmdb_id' => 1218925,
                 'title' => 'Chainsaw man: Reze Arc',
-                'slug' => 'chainsaw-man-reze-arc',
-                'description' => 'Descripción de Chainsaw man: Reze Arc',
-                'poster' => 'poster_chainsaw_man.jpg',
+                'original_title' => 'Chainsaw man: Reze Arc',
+                'overview' => 'Descripción de Chainsaw man: Reze Arc',
+                'poster_path' => 'poster_chainsaw_man.jpg',
+                'genres' => 'Ciencia ficción, Drama',
+                'release_date' => '2021-10-22',
+                'imdb_id' => 'tt1160419',
+                'runtime' => 125,
+                'tagline' => '',
+                'status' => 'Released',
+                'last_synced_at' => now(),
+                'needs_detail_sync' => false,
             ]);
         }
     }

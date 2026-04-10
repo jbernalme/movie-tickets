@@ -1,5 +1,7 @@
 // types/screening.ts
 
+import { Movie } from './movie';
+
 export type SeatStatus = 'available' | 'unavailable';
 
 export interface SeatTypeData {
@@ -58,6 +60,7 @@ export interface Screening {
 
     // Relación con hall (cargada con eager loading)
     hall?: Hall;
+    movie?: Movie;
 }
 
 export interface SeatRow {

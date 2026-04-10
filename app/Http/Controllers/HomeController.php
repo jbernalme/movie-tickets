@@ -14,7 +14,17 @@ use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
-    public function index(TmdbService $tmdbService): Response
+    public function index()
+    {
+        $moviesByStatus = Movie::all()
+            ->map(fn($movie) => MovieData::fromDb($movie))
+            ->groupBy('status');
+        // dump($moviesByStatus);
+
+        return Inertia::render('home', ['movies' => $moviesByStatus]);
+    }
+
+    public function indext(TmdbService $tmdbService): Response
     {
         $movies = Cache::remember('home_movies', 3600, function () use (
             $tmdbService,

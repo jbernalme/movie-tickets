@@ -62,4 +62,19 @@ class PaymentController extends Controller
     {
         //
     }
+
+    public function approval()
+    {
+        dump('approval');
+    }
+
+    public function cancelled()
+    {
+        dump('cancelled');
+    }
+
+    public function pending()
+    {
+        dump('pending');
+    }
 }

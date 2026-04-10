@@ -42,6 +42,12 @@ export default function TicketSummary({
         screening.start_time,
         'MMM D, YYYY h:mm a',
     );
+
+    const handlePay = () => {
+        // TODO: Implement payment logic
+        console.log({ selectedSeats });
+    };
+
     return (
         <>
             <div className="group relative w-[360px] overflow-hidden rounded-xl border border-gray-800">
@@ -175,6 +181,7 @@ export default function TicketSummary({
                             'w-full cursor-pointer rounded border border-primary/50 bg-primary px-4 py-3 text-base font-bold text-foreground uppercase shadow-md shadow-primary/50 transition-all duration-300 hover:-translate-y-[2px] hover:border-primary/70 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:-translate-y-0 disabled:hover:border-primary/50',
                         )}
                         disabled={isValidating || !selectedSeats.length}
+                        onClick={handlePay}
                     >
                         {selectedSeats.length > 0
                             ? 'Confirmar Reserva'

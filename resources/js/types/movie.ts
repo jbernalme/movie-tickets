@@ -1,6 +1,8 @@
 export interface Movie {
     id: number;
+    imdb_id: string;
     title: string;
+    original_title: string;
     slug: string;
     overview: string | null;
     backdrop_path: string;
@@ -9,7 +11,11 @@ export interface Movie {
     vote_average: number;
     release_date: string;
     year: string;
-    genres: string[];
+    genres: string;
+    tmdb_id: number;
+    runtime: string;
+    tagline: string;
+    status: string;
 }
 
 export interface MovieResponse {
@@ -25,11 +31,9 @@ export interface Genre {
 }
 
 export interface MoviesData {
-    trending: MovieResponse;
-    nowPlaying: MovieResponse;
-    upcoming: MovieResponse;
-    topRated: MovieResponse;
-    genres: Genre[];
+    now_playing: Movie[];
+    upcoming: Movie[];
+    trending: Movie[];
 }
 
 export interface MovieDetails extends Movie {
@@ -52,6 +56,10 @@ export interface MovieDetails extends Movie {
     screenplay: Cast[];
     cast: Cast[];
     cast_str_list: string;
+    tmdb_id: number;
+    original_title: string;
+    imdb_id: string;
+    status: string;
 }
 
 export interface Backdrop {

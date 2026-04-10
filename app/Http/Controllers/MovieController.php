@@ -55,8 +55,6 @@ class MovieController extends Controller
             $movie->screenings,
         );
 
-        dump($screenForMonth);
-
         $movieTmdb = $this->tmdbService->getMovie($movieId);
 
         return Inertia::render('movie/show', [

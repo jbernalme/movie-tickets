@@ -22,12 +22,12 @@ interface HomePageProps {
 }
 
 export default function Home({ movies }: HomePageProps) {
-    console.log(movies.upcoming.results[0]);
+    console.log({ movies });
     return (
         <MainLayout breadcrumbs={breadcrumbs}>
             <Hero
-                imgPath={movies.trending.results[1].backdrop_path}
-                movie={movies.trending.results[1]}
+                imgPath={movies.trending[1].backdrop_path}
+                movie={movies.trending[1]}
             />
 
             <section className="pb-20">
@@ -43,7 +43,7 @@ export default function Home({ movies }: HomePageProps) {
                         </Button>
                     </div>
                     <Carousel
-                        data={movies.trending.results}
+                        data={movies.now_playing}
                         CardComponent={MovieCard}
                     />
                 </div>
@@ -61,7 +61,7 @@ export default function Home({ movies }: HomePageProps) {
                         </Button>
                     </div>
                     <Carousel
-                        data={movies.trending.results}
+                        data={movies.upcoming}
                         CardComponent={MovieCard}
                     />
                 </div>
