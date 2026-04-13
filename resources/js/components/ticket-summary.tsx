@@ -8,6 +8,7 @@ import {
     DisclosurePanel,
 } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
+import BoxWraper from './box-wraper';
 import { Icon } from './icon';
 import InputDiscount from './input-discount';
 
@@ -50,7 +51,7 @@ export default function TicketSummary({
 
     return (
         <>
-            <div className="group relative w-[360px] overflow-hidden rounded-xl border border-gray-800">
+            <BoxWraper className="group w-[360px]">
                 <div className="absolute top-0 right-0 left-0 h-1 bg-primary group-hover:animate-pulse" />
                 <div className="space-y-6 p-10">
                     <div className="flex items-center justify-between border-b border-gray-800 pb-4">
@@ -188,7 +189,7 @@ export default function TicketSummary({
                             : 'Selecciona un asiento'}
                     </button>
                 </div>
-            </div>
+            </BoxWraper>
         </>
     );
 }

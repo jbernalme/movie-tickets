@@ -11,7 +11,7 @@ export interface Movie {
     vote_average: number;
     release_date: string;
     year: string;
-    genres: string;
+    genres: string[];
     tmdb_id: number;
     runtime: string;
     tagline: string;

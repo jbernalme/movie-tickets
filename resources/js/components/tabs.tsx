@@ -3,9 +3,10 @@ import { Screening, ScreeningsByMonthData } from '@/types/screening';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { Clock } from 'lucide-react';
 import { Icon } from './ui/icon';
+import Subtitle from './ui/subtitle';
 
 const tabStyles =
-    'rounded border border-ring cursor-pointer bg-secondary-foreground data-selected:border-primary data-selected:bg-primary';
+    'rounded border border-ring cursor-pointer bg-background hover:bg-muted data-selected:border-primary data-selected:bg-primary transition-colors ';
 
 interface TabsProps {
     tabs: ScreeningsByMonthData[];
@@ -23,24 +24,28 @@ export default function Tabs({
     };
     return (
         <TabGroup>
-            <TabList className="flex gap-2">
-                {tabs.map((tab, index) => (
-                    <Tab
-                        key={index}
-                        className={cn(
-                            'flex items-center gap-2 px-4 py-2 font-bold capitalize',
-                            tabStyles,
-                        )}
-                    >
-                        {tab.month_name.split(' ')[0]}
-                    </Tab>
-                ))}
+            <TabList className="flex justify-between">
+                <Subtitle className="mt-4 font-inter font-bold uppercase">
+                    Selecciona fecha
+                </Subtitle>
+                <div className="flex gap-4">
+                    {tabs.map((tab, index) => (
+                        <Tab
+                            key={index}
+                            className={cn(
+                                'flex cursor-pointer items-center gap-2 font-bold text-muted-foreground capitalize underline-offset-4 transition-colors hover:text-foreground data-selected:text-primary data-selected:underline',
+                            )}
+                        >
+                            {tab.month_name.split(' ')[0]}
+                        </Tab>
+                    ))}
+                </div>
             </TabList>
             <TabPanels>
                 {tabs.map((tab, index) => (
                     <TabPanel key={index}>
                         {/* nested tab */}
-                        <TabGroup className="mt-4">
+                        <TabGroup>
                             {/* Dias */}
                             <TabList className="flex gap-2">
                                 {tab.days.map((day, index) => (
@@ -64,9 +69,9 @@ export default function Tabs({
                                 {tab.days.map((day, index) => (
                                     <TabPanel key={index}>
                                         {/* Formato y Audio */}
-                                        <h4 className="my-4 font-inter font-bold uppercase">
+                                        <Subtitle className="mt-4">
                                             Formato y Audio
-                                        </h4>
+                                        </Subtitle>
                                         <TabGroup className="mt-4">
                                             <TabList className="flex gap-2">
                                                 {day.format_audios.map(
@@ -83,9 +88,9 @@ export default function Tabs({
                                                     ),
                                                 )}
                                             </TabList>
-                                            <h4 className="my-4 font-inter font-bold uppercase">
+                                            <Subtitle className="my-4">
                                                 Horarios
-                                            </h4>
+                                            </Subtitle>
                                             <TabPanels className="mt-4 flex flex-wrap gap-2">
                                                 {/* Hora */}
                                                 {day.format_audios.map(
@@ -106,12 +111,13 @@ export default function Tabs({
                                                                             )
                                                                         }
                                                                         className={cn(
-                                                                            'flex cursor-pointer items-center gap-2 rounded border border-gold bg-gold/20 px-4 py-2 font-bold text-gold data-selected:border-primary',
+                                                                            'flex items-center gap-2 px-4 py-2 font-bold',
+                                                                            tabStyles,
                                                                             screeningSelected?.id ===
                                                                                 time
                                                                                     .screening
                                                                                     .id &&
-                                                                                'border-primary bg-primary text-white',
+                                                                                'border border-primary bg-primary-foreground hover:bg-primary-foreground',
                                                                         )}
                                                                         key={
                                                                             index
