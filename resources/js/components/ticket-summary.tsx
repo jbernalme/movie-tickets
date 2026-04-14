@@ -9,8 +9,10 @@ import {
 } from '@headlessui/react';
 import { ChevronDown } from 'lucide-react';
 import BoxWraper from './box-wraper';
+import ButtonMt from './button-mt';
 import { Icon } from './icon';
 import InputDiscount from './input-discount';
+import Subtitle from './subtitle';
 
 interface TicketSummaryProps {
     screening: Screening;
@@ -29,9 +31,7 @@ interface TicketSummaryProps {
 export default function TicketSummary({
     screening,
     selectedSeats,
-    setDiscountCode,
     validateDiscount,
-    discountCode,
     subtotal,
     isValidating,
     appliedDiscount,
@@ -58,29 +58,21 @@ export default function TicketSummary({
                         <h2 className="text-center font-bebas-neue text-3xl font-bold text-white">
                             Movie <span className="text-primary">Tikets</span>
                         </h2>
-                        <span className="text-sm text-gray-500 uppercase">
-                            Main 123456
-                        </span>
+                        <Subtitle>Hayulos, Bogotá</Subtitle>
                     </div>
                     <div className="space-y-4 border-b border-gray-800 pb-4">
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500 uppercase">
-                                Ubicación
-                            </span>
+                            <Subtitle>Ubicación</Subtitle>
                             <span className="font-bold">California</span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500 uppercase">
-                                Función
-                            </span>
+                            <Subtitle>Función</Subtitle>
                             <span className="font-bold capitalize">
                                 {screeningDate}
                             </span>
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-500 uppercase">
-                                Asientos
-                            </span>
+                            <Subtitle>Asientos</Subtitle>
 
                             <span className="font-bold">
                                 {selectedSeats.length}
@@ -148,9 +140,9 @@ export default function TicketSummary({
                             </Disclosure>
                         </div>
                         <div className="">
-                            <span className="mb-2 block text-sm text-gray-500 uppercase">
+                            <Subtitle className="mb-2 block">
                                 Código de descuento
-                            </span>
+                            </Subtitle>
 
                             <InputDiscount
                                 validateDiscount={validateDiscount}
@@ -163,9 +155,9 @@ export default function TicketSummary({
                         </div>
                     </div>
                     <div className="flex w-full items-center justify-between">
-                        <span className="text-sm text-gray-500 capitalize">
+                        <Subtitle className="capitalize">
                             Total a pagar
-                        </span>
+                        </Subtitle>
                         <span
                             className={cn(
                                 'font-jetbrains-mono text-3xl font-bold text-primary transition-all duration-300',
@@ -175,19 +167,17 @@ export default function TicketSummary({
                             ${appliedDiscount?.total || subtotal}
                         </span>
                     </div>
-
-                    <button
-                        type="button"
-                        className={cn(
-                            'w-full cursor-pointer rounded border border-primary/50 bg-primary px-4 py-3 text-base font-bold text-foreground uppercase shadow-md shadow-primary/50 transition-all duration-300 hover:-translate-y-[2px] hover:border-primary/70 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none disabled:hover:-translate-y-0 disabled:hover:border-primary/50',
-                        )}
+                    <ButtonMt
+                        as="button"
                         disabled={isValidating || !selectedSeats.length}
                         onClick={handlePay}
+                        preserveState
+                        preserveScroll
                     >
                         {selectedSeats.length > 0
                             ? 'Confirmar Reserva'
                             : 'Selecciona un asiento'}
-                    </button>
+                    </ButtonMt>
                 </div>
             </BoxWraper>
         </>

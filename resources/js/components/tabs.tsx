@@ -2,8 +2,8 @@ import { cn } from '@/lib/utils';
 import { Screening, ScreeningsByMonthData } from '@/types/screening';
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react';
 import { Clock } from 'lucide-react';
+import Subtitle from './subtitle';
 import { Icon } from './ui/icon';
-import Subtitle from './ui/subtitle';
 
 const tabStyles =
     'rounded border border-ring cursor-pointer bg-background hover:bg-muted data-selected:border-primary data-selected:bg-primary transition-colors ';
@@ -25,7 +25,7 @@ export default function Tabs({
     return (
         <TabGroup>
             <TabList className="flex justify-between">
-                <Subtitle className="mt-4 font-inter font-bold uppercase">
+                <Subtitle className="mb-4 font-inter font-bold uppercase">
                     Selecciona fecha
                 </Subtitle>
                 <div className="flex gap-4">
@@ -65,11 +65,11 @@ export default function Tabs({
                                     </Tab>
                                 ))}
                             </TabList>
-                            <TabPanels>
+                            <TabPanels className="mt-4">
                                 {tab.days.map((day, index) => (
                                     <TabPanel key={index}>
                                         {/* Formato y Audio */}
-                                        <Subtitle className="mt-4">
+                                        <Subtitle className="mb-4">
                                             Formato y Audio
                                         </Subtitle>
                                         <TabGroup className="mt-4">
@@ -88,7 +88,7 @@ export default function Tabs({
                                                     ),
                                                 )}
                                             </TabList>
-                                            <Subtitle className="my-4">
+                                            <Subtitle className="mt-4">
                                                 Horarios
                                             </Subtitle>
                                             <TabPanels className="mt-4 flex flex-wrap gap-2">

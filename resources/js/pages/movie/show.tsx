@@ -1,11 +1,12 @@
 import { select } from '@/actions/App/Http/Controllers/SeatController';
 import BoxWraper from '@/components/box-wraper';
+import ButtonMt from '@/components/button-mt';
 import Footer from '@/components/footer';
 import HeroDetails from '@/components/hero-details';
 import { Icon } from '@/components/icon';
+import Subtitle from '@/components/subtitle';
 import Tabs from '@/components/tabs';
-import Subtitle from '@/components/ui/subtitle';
-import Title from '@/components/ui/title';
+import Title from '@/components/title';
 import MainLayout from '@/layouts/main-layout';
 import { MovieDetails } from '@/types/movie';
 import { Screening, ScreeningsByMonthData } from '@/types/screening';
@@ -15,7 +16,6 @@ import {
     ListboxOption,
     ListboxOptions,
 } from '@headlessui/react';
-import { Link } from '@inertiajs/react';
 import { Armchair, Check, ChevronDown, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
@@ -94,7 +94,7 @@ export default function Show({
                 <div className="col-span-3">
                     {screenings.length > 0 ? (
                         <section className="rounded-xl bg-card p-10">
-                            <Subtitle>Teatro</Subtitle>
+                            <Subtitle className="mb-4">Teatro</Subtitle>
                             <Listbox
                                 value={selectedTheater}
                                 onChange={setSelectedTheater}
@@ -138,42 +138,36 @@ export default function Show({
                                     ))}
                                 </ListboxOptions>
                             </Listbox>
-                            {/* <Subtitle className="mt-4 font-inter font-bold uppercase">
-                                Selecciona fecha
-                            </Subtitle> */}
-                            <div className="flex flex-col gap-6 overflow-x-auto scroll-auto">
+                            <div className="mt-4 flex flex-col gap-4">
                                 <Tabs
                                     tabs={screenings}
                                     screeningSelected={screeningSelected}
                                     onScreeningSelect={setScreeningSelected}
                                 />
-                                <Link
-                                    className="flex cursor-pointer items-center justify-center gap-2 rounded bg-primary py-4 font-inter text-xl font-bold text-white uppercase hover:bg-primary/80 disabled:cursor-not-allowed disabled:bg-primary/40"
-                                    disabled={!screeningSelected}
+                                <ButtonMt
                                     as="button"
-                                    href={
-                                        screeningSelected
-                                            ? select({
-                                                  slug: movie.slug,
-                                                  screening:
-                                                      screeningSelected.id,
-                                              })
-                                            : '#'
-                                    }
+                                    // disabled={!screeningSelected}
+                                    href={select({
+                                        slug: movie.slug,
+                                        screening: 2,
+                                    })}
                                 >
                                     <Icon
-                                        className="size-10"
+                                        className="size-6"
                                         iconNode={Armchair}
                                     />
                                     Eligir asiento
-                                </Link>
+                                </ButtonMt>
                             </div>
                         </section>
                     ) : (
-                        <section className="rounded-xl border border-primary bg-primary-foreground p-10 backdrop-blur-lg">
-                            <h1 className="mb-4 text-center font-bebas-neue text-4xl uppercase">
+                        <section className="rounded-xl border border-primary bg-primary-foreground py-6">
+                            <h1 className="text-center font-bebas-neue text-4xl uppercase">
                                 No hay funciones disponibles
                             </h1>
+                            <p className="text-center text-lg">
+                                Por favor, intenta más tarde
+                            </p>
                         </section>
                     )}
                 </div>
