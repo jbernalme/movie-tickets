@@ -10,36 +10,31 @@ import { memo, SVGProps } from 'react';
 import { Icon } from '../ui/icon';
 
 type CinemaSeatProps = {
-    row: string;
-    number: string;
     seat: Seat;
-    walkable?: boolean;
     isSelected?: boolean;
     onSeatClick: (seat: Seat) => void;
     // ✅ className ya está incluido automáticamente
 } & SVGProps<SVGSVGElement>;
 
 const CinemaSeat = ({
-    row,
-    number,
     seat,
-    walkable,
     className,
     isSelected = false,
     onSeatClick,
     ...props
 }: CinemaSeatProps) => {
+    const { row, number, is_walkway } = seat;
     console.log({ row, number });
 
     const handleClick = () => {
-        if (!walkable) {
+        if (!is_walkway) {
             onSeatClick(seat);
         }
     };
 
     return (
         <div className="flex items-center justify-center">
-            {!walkable ? (
+            {!is_walkway ? (
                 <Tooltip>
                     <TooltipTrigger className="cursor-pointer" asChild>
                         <svg
@@ -111,26 +106,14 @@ const CinemaSeat = ({
         </div>
     );
 };
-// Función de comparación personalizada
+// Función de comparación para memo (ahora más simple)
 const areEqual = (prevProps: CinemaSeatProps, nextProps: CinemaSeatProps) => {
-    // Solo re-renderiza si isSelected realmente CAMBIÓ de true a false o viceversa
-    if (prevProps.isSelected !== nextProps.isSelected) {
-        return false; // false = SÍ necesita re-renderizar
-    }
+    // Solo re-renderiza si cambia la selección o el asiento es diferente
+    if (prevProps.isSelected !== nextProps.isSelected) return false;
+    if (prevProps.seat.id !== nextProps.seat.id) return false;
 
-    // Si isSelected es igual, compara otras props que realmente importan
-    if (prevProps.walkable !== nextProps.walkable) {
-        return false;
-    }
-
-    // Si el seat.id es diferente (no debería pasar, pero por seguridad)
-    if (prevProps.seat.id !== nextProps.seat.id) {
-        return false;
-    }
-
-    // La función onSeatClick está memorizada, no debería cambiar
-    // Si todo es igual, NO re-renderices
-    return true; // true = NO necesita re-renderizar
+    // onSeatClick está memorizado con useCallback, no debería cambiar
+    return true;
 };
 
 export default memo(CinemaSeat, areEqual);

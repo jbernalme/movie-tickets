@@ -6,7 +6,7 @@ import { useDiscount } from '@/hooks/use-discount';
 
 import MainLayout from '@/layouts/main-layout';
 import { Screening, Seat, SeatRow } from '@/types/screening';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface SelectProps {
     screening: Screening;
@@ -15,7 +15,12 @@ interface SelectProps {
 
 export default function Select({ screening, seatsByRows }: SelectProps) {
     const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
-    const [subtotal, setSubtotal] = useState(0);
+
+    const subtotal = selectedSeats.reduce(
+        (total, seat) =>
+            total + seat.seat_type.price_multiplier * screening.base_price,
+        0,
+    );
 
     const {
         discountCode,
@@ -30,48 +35,22 @@ export default function Select({ screening, seatsByRows }: SelectProps) {
 
     console.log({ screening, appliedDiscount });
 
-    const handleSeatClick = useCallback(
-        (seat: Seat) => {
-            setSelectedSeats((prev) => {
-                const isSelected = prev.some((s) => s.id === seat.id);
+    useEffect(() => {
+        if (selectedSeats.length === 0 && appliedDiscount) {
+            removeDiscount();
+        }
+    }, [selectedSeats, appliedDiscount, removeDiscount]);
 
-                // Calcula el nuevo array
-                const newSelectedSeats = isSelected
-                    ? prev.filter((s) => s.id !== seat.id)
-                    : [...prev, seat];
+    const handleSeatClick = useCallback((seat: Seat) => {
+        setSelectedSeats((prev) => {
+            const isSelected = prev.some((s) => s.id === seat.id);
+            const newSelectedSeats = isSelected
+                ? prev.filter((s) => s.id !== seat.id)
+                : [...prev, seat];
 
-                // Calcula el subtotal con el NUEVO array
-                const newSubtotal = newSelectedSeats.reduce(
-                    (total, s) =>
-                        total +
-                        s.seat_type.price_multiplier * screening.base_price,
-                    0,
-                );
-
-                // Actualiza subtotal
-                setSubtotal(newSubtotal);
-
-                // Si no hay asientos, remover descuento
-                if (newSelectedSeats.length === 0 && appliedDiscount) {
-                    removeDiscount();
-                }
-
-                // Si hay descuento aplicado, re-validar con nuevo subtotal
-                if (appliedDiscount && newSelectedSeats.length > 0) {
-                    validateDiscount(appliedDiscount.code, newSubtotal);
-                }
-
-                // Retorna el nuevo array
-                return newSelectedSeats;
-            });
-        },
-        [
-            appliedDiscount,
-            removeDiscount,
-            screening.base_price,
-            validateDiscount,
-        ],
-    );
+            return newSelectedSeats;
+        });
+    }, []);
 
     return (
         <MainLayout>
@@ -92,10 +71,7 @@ export default function Select({ screening, seatsByRows }: SelectProps) {
                                     {row.seats.map((seat) => (
                                         <CinemaSeat
                                             key={seat.id}
-                                            row={row.row}
-                                            number={seat.number}
                                             seat={seat}
-                                            walkable={Boolean(seat.is_walkway)}
                                             onSeatClick={handleSeatClick}
                                             isSelected={selectedSeats.some(
                                                 (s) => s.id === seat.id,
@@ -118,7 +94,7 @@ export default function Select({ screening, seatsByRows }: SelectProps) {
                         setDiscountCode={setDiscountCode}
                         validateDiscount={validateDiscount}
                         discountCode={discountCode}
-                        subtotal={subtotal}
+                        subtotal={subtotal} // ✅ Pasamos el subtotal calculado
                         isValidating={isValidating}
                         appliedDiscount={appliedDiscount}
                         removeDiscount={removeDiscount}

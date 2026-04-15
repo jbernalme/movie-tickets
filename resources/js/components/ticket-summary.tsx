@@ -49,6 +49,13 @@ export default function TicketSummary({
         console.log({ selectedSeats });
     };
 
+    const calTotal = () => {
+        if (appliedDiscount) {
+            return subtotal - appliedDiscount.discount_amount;
+        }
+        return subtotal;
+    };
+
     return (
         <>
             <BoxWraper className="group w-[360px]">
@@ -164,7 +171,7 @@ export default function TicketSummary({
                                 isAnimating && 'animate-price-highlight',
                             )}
                         >
-                            ${appliedDiscount?.total || subtotal}
+                            ${calTotal()}
                         </span>
                     </div>
                     <ButtonMt
