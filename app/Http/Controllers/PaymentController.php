@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Services\PaymentPlatforms\MercadoPagoService;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -10,10 +11,7 @@ class PaymentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.

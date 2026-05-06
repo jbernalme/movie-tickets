@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PaymentController;
@@ -59,6 +60,10 @@ Route::get('payment/cancelled', [PaymentController::class, 'cancelled'])->name(
 );
 Route::get('payment/pending', [PaymentController::class, 'pending'])->name(
     'payment.pending',
+);
+
+Route::post('checkout', [CheckoutController::class, 'index'])->name(
+    'checkout.index',
 );
 
 require __DIR__ . '/settings.php';

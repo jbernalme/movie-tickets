@@ -83,7 +83,7 @@ export default function InputDiscount({
                         <div className="flex justify-between">
                             <span className="text-gray-500">Subtotal</span>
                             <span className="font-jetbrains-mono font-bold text-foreground">
-                                {subtotal}
+                                ${subtotal}
                             </span>
                         </div>
                         <div className="flex justify-between">

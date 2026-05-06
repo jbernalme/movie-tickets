@@ -1,5 +1,6 @@
 import { formatDate } from '@/lib/date';
 import { cn } from '@/lib/utils';
+import { index } from '@/routes/checkout';
 import { Screening, Seat } from '@/types/screening';
 import { AppliedDiscount } from '@/types/seat';
 import {
@@ -7,11 +8,14 @@ import {
     DisclosureButton,
     DisclosurePanel,
 } from '@headlessui/react';
-import { ChevronDown } from 'lucide-react';
+import { router } from '@inertiajs/react';
+import { ChevronDown, Info } from 'lucide-react';
+import { useState } from 'react';
 import BoxWraper from './box-wraper';
 import ButtonMt from './button-mt';
 import { Icon } from './icon';
 import InputDiscount from './input-discount';
+import Modal from './modal';
 import Subtitle from './subtitle';
 
 interface TicketSummaryProps {
@@ -32,6 +36,7 @@ export default function TicketSummary({
     screening,
     selectedSeats,
     validateDiscount,
+    discountCode,
     subtotal,
     isValidating,
     appliedDiscount,
@@ -39,14 +44,17 @@ export default function TicketSummary({
     error,
     isAnimating = false,
 }: TicketSummaryProps) {
+    const [openModal, setOpenModal] = useState(false);
+
     const screeningDate = formatDate(
         screening.start_time,
         'MMM D, YYYY h:mm a',
     );
 
-    const handlePay = () => {
-        // TODO: Implement payment logic
-        console.log({ selectedSeats });
+    const handlePay = (e: React.FormEvent) => {
+        e.preventDefault();
+        setOpenModal(true);
+        console.log({ selectedSeats, screening, discountCode });
     };
 
     const calTotal = () => {
@@ -162,9 +170,7 @@ export default function TicketSummary({
                         </div>
                     </div>
                     <div className="flex w-full items-center justify-between">
-                        <Subtitle className="capitalize">
-                            Total a pagar
-                        </Subtitle>
+                        <Subtitle>Total a pagar</Subtitle>
                         <span
                             className={cn(
                                 'font-jetbrains-mono text-3xl font-bold text-primary transition-all duration-300',
@@ -175,17 +181,67 @@ export default function TicketSummary({
                         </span>
                     </div>
                     <ButtonMt
-                        as="button"
+                        fullWidth
                         disabled={isValidating || !selectedSeats.length}
                         onClick={handlePay}
-                        preserveState
-                        preserveScroll
                     >
                         {selectedSeats.length > 0
                             ? 'Confirmar Reserva'
                             : 'Selecciona un asiento'}
                     </ButtonMt>
                 </div>
+                <Modal
+                    show={openModal}
+                    onClose={() => setOpenModal(false)}
+                    maxWidth="lg"
+                >
+                    <BoxWraper className="bg-background px-10 py-8">
+                        <h2 className="font-bebas-neue text-3xl">
+                            Confirmar{' '}
+                            <span className="text-primary">Reserva</span>
+                        </h2>
+                        <Subtitle>
+                            ¿Estás seguro de que deseas confirmar la reserva?
+                        </Subtitle>
+                        <p className="my-5 font-inter text-muted-foreground">
+                            Una vez confirmada, se reservarán tus asientos
+                            durante 10 minutos para que puedas completar el
+                            pago. <br />
+                            Si el pago no se completa en el tiempo establecido,
+                            los asientos se liberarán automáticamente y tendrás
+                            que seleccionarlos nuevamente.
+                        </p>
+
+                        <div className="flex items-center justify-center gap-2 rounded border bg-gold/10 p-4 text-sm text-gold">
+                            <Icon iconNode={Info} className="size-8" />
+                            Consejo: Ten lista tu información de pago para
+                            completar rápidamente la transacción.
+                        </div>
+
+                        <div className="mt-5 flex justify-end gap-2">
+                            <ButtonMt
+                                variant="secondary"
+                                onClick={() => setOpenModal(false)}
+                            >
+                                Cancelar
+                            </ButtonMt>
+                            <ButtonMt
+                                onClick={() => {
+                                    router.post(index(), {
+                                        screening_id: screening.id,
+                                        seat_ids: selectedSeats.map(
+                                            (seat) => seat.id,
+                                        ),
+                                        discount_code: discountCode,
+                                    });
+                                    console.log('comfirming reservation');
+                                }}
+                            >
+                                Confirmar
+                            </ButtonMt>
+                        </div>
+                    </BoxWraper>
+                </Modal>
             </BoxWraper>
         </>
     );

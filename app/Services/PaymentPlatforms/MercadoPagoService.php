@@ -50,7 +50,6 @@ class MercadoPagoService
         try {
             $client = new PreferenceClient();
 
-            // ✅ Construir preferencia de pago (sin notification_url)
             $preferenceData = [
                 'items' => [
                     [

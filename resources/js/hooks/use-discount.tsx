@@ -39,6 +39,7 @@ export function useDiscount() {
                     subtotal: response.data.subtotal,
                     total: response.data.total,
                 });
+                setDiscountCode(response.data.discountData.code);
             } else {
                 setError(response.data.message);
             }

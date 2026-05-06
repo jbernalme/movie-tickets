@@ -102,7 +102,7 @@ class TicketController extends Controller
                     'discount_id' => $validDiscount?->id,
                     'ticket_code' => 'TK' . time() . rand(1000, 9999),
                     'total_price' => $this->discountService->formatTotal(
-                        $total,
+                        $subtotal,
                     ),
                     'discount_price' => $this->discountService->formatTotal(
                         $subtotal - $total,

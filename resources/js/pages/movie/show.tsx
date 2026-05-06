@@ -16,7 +16,7 @@ import {
     ListboxOption,
     ListboxOptions,
 } from '@headlessui/react';
-import { Armchair, Check, ChevronDown, MapPin } from 'lucide-react';
+import { Armchair, Check, ChevronDown, Info, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
 const theaters = [
@@ -144,20 +144,31 @@ export default function Show({
                                     screeningSelected={screeningSelected}
                                     onScreeningSelect={setScreeningSelected}
                                 />
-                                <ButtonMt
-                                    as="button"
-                                    // disabled={!screeningSelected}
-                                    href={select({
-                                        slug: movie.slug,
-                                        screening: 2,
-                                    })}
-                                >
-                                    <Icon
-                                        className="size-6"
-                                        iconNode={Armchair}
-                                    />
-                                    Eligir asiento
-                                </ButtonMt>
+                                {screeningSelected ? (
+                                    <ButtonMt
+                                        fullWidth
+                                        href={
+                                            select({
+                                                slug: movie.slug,
+                                                screening: screeningSelected.id,
+                                            }).url
+                                        }
+                                    >
+                                        <Icon
+                                            className="size-6"
+                                            iconNode={Armchair}
+                                        />
+                                        Eligir asiento
+                                    </ButtonMt>
+                                ) : (
+                                    <span className="flex items-center justify-center gap-2 text-center text-lg text-muted-foreground">
+                                        <Icon
+                                            className="size-6"
+                                            iconNode={Info}
+                                        />
+                                        Selecciona una función
+                                    </span>
+                                )}
                             </div>
                         </section>
                     ) : (

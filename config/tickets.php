@@ -1,4 +1,4 @@
 <?php
 return [
-    'expiration_minutes' => env('TICKET_EXPIRATION_MINUTES', 10),
+    'expiration_minutes' => (int) env('TICKET_EXPIRATION_MINUTES', 10),
 ];
