@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Tickets\CreateTicketReservation;
 use App\Data\TicketReservationData;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -23,7 +24,11 @@ class CheckoutController extends Controller
         $data = TicketReservationData::fromRequest($validated, auth()->id());
 
         $ticket = $createTicketReservation($data);
-        dd($ticket);
-        return Inertia::render('checkout');
+
+        $ticket->load(['screening.movie', 'seats.seatType', 'screening.hall']);
+
+        return Inertia::render('checkout', [
+            'ticket' => $ticket,
+        ]);
     }
 }

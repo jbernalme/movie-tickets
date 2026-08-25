@@ -6,6 +6,7 @@ use App\Models\Screening;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
@@ -23,7 +24,7 @@ class Ticket extends Model
     ];
     public function seats(): BelongsToMany
     {
-        return $this->belongsToMany(Seat::class);
+        return $this->belongsToMany(Seat::class)->withPivot('price');
     }
     public function user(): BelongsTo
     {
@@ -32,5 +33,9 @@ class Ticket extends Model
     public function screening(): BelongsTo
     {
         return $this->belongsTo(Screening::class);
+    }
+    public function payment(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 }

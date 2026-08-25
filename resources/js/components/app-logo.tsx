@@ -11,7 +11,7 @@ export default function AppLogo() {
                 <span className="mb-0.5 truncate leading-tight">
                     Movie
                     <span className="ml-0.5 font-extrabold text-primary">
-                        Tikets
+                        Tickets
                     </span>
                 </span>
             </div>

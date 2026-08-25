@@ -52,15 +52,20 @@ Route::get('/reservations', [ReservationController::class, 'index'])
     ->name('reservations.index');
 
 // rutas payment
-Route::get('payment/approval', [PaymentController::class, 'approval'])->name(
-    'payment.approval',
-);
-Route::get('payment/cancelled', [PaymentController::class, 'cancelled'])->name(
-    'payment.cancelled',
-);
-Route::get('payment/pending', [PaymentController::class, 'pending'])->name(
-    'payment.pending',
-);
+Route::middleware('auth')->group(function () {
+    Route::post('payment/process', [PaymentController::class, 'process'])->name(
+        'payment.process',
+    );
+    Route::get('payment/approval', [PaymentController::class, 'approval'])->name(
+        'payment.approval',
+    );
+    Route::get('payment/cancelled', [PaymentController::class, 'cancelled'])->name(
+        'payment.cancelled',
+    );
+    Route::get('payment/pending', [PaymentController::class, 'pending'])->name(
+        'payment.pending',
+    );
+});
 
 Route::post('checkout', [CheckoutController::class, 'index'])->name(
     'checkout.index',

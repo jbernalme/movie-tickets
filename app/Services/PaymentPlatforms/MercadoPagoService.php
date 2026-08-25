@@ -15,7 +15,6 @@ class MercadoPagoService
 {
     protected string $accessToken;
     protected string $publicKey;
-    protected array $backUrls;
 
     public function __construct()
     {
@@ -23,23 +22,13 @@ class MercadoPagoService
         $this->accessToken = config('services.mercadopago.access_token');
         $this->publicKey = config('services.mercadopago.public_key');
 
-        // ✅ URLs de retorno dinámicas (usando rutas con nombre)
-        $this->backUrls = [
-            'success' => route('payment.approval', [], true),
-            'failure' => route('payment.cancelled', [], true),
-            'pending' => route('payment.cancelled', [], true),
-        ];
-
         // ✅ Inicializar SDK de Mercado Pago
         if (empty($this->accessToken)) {
             throw new PaymentPlatformNotConfiguredException('mercadopago');
         }
 
         MercadoPagoConfig::setAccessToken($this->accessToken);
-        MercadoPagoConfig::setRuntimeEnviroment(
-            MercadoPagoConfig::LOCALE,
-            'es-AR',
-        );
+        MercadoPagoConfig::setRuntimeEnviroment(MercadoPagoConfig::LOCAL);
     }
 
     /**
@@ -48,6 +37,14 @@ class MercadoPagoService
     public function handlePayment(Request $request, Payment $payment)
     {
         try {
+            $backUrls = [
+                'success' => route('payment.approval', [], true),
+                'failure' => route('payment.cancelled', [], true),
+                'pending' => route('payment.pending', [], true),
+            ];
+
+            Log::info('MercadoPago back_urls', $backUrls);
+
             $client = new PreferenceClient();
 
             $preferenceData = [
@@ -69,8 +66,7 @@ class MercadoPagoService
                     'name' => $request->user()->name ?? null,
                     'email' => $request->user()->email ?? null,
                 ],
-                'back_urls' => $this->backUrls,
-                'auto_return' => 'approved', // Redirección automática si es aprobado
+                'back_urls' => $backUrls,
                 'external_reference' => (string) $payment->id, // Para tracking interno
                 'statement_descriptor' => config('app.name'), // Nombre en extracto bancario
             ];
@@ -88,15 +84,18 @@ class MercadoPagoService
                 ],
             ]);
 
-            // ✅ Redirigir al checkout de Mercado Pago
-            return redirect($preference->init_point);
-        } catch (\MercadoPago\MercadoPagoException $e) {
+            // ✅ Devolver URL del checkout de Mercado Pago
+            return $preference->init_point;
+        } catch (\MercadoPago\Exceptions\MPApiException $e) {
             Log::error('MercadoPago preference creation failed', [
                 'payment_id' => $payment->id,
-                'error' => $e->getMessage(),
+                'status_code' => $e->getStatusCode(),
+                'api_response' => $e->getApiResponse()->getContent(),
             ]);
 
-            throw new Exception(__('payment.errors.processing_failed'));
+            throw new Exception(
+                __('payment.errors.processing_failed') . ' (' . $e->getStatusCode() . ')'
+            );
         }
     }
 
@@ -178,11 +177,13 @@ class MercadoPagoService
             ]),
         ]);
 
+        $payment->ticket->update(['status' => 'confirmed']);
+
         return redirect()
             ->route('dashboard')
             ->withSuccess(
                 __('payment.messages.payment_success', [
-                    'name' => $payment->user->name ?? 'Cliente',
+                    'name' => $payment->ticket->user->name ?? 'Cliente',
                     'amount' => number_format($payment->amount, 2),
                     'currency' => strtoupper($payment->currency),
                 ]),
@@ -218,6 +219,8 @@ class MercadoPagoService
             'gateway_payment_id' => $mpPayment?->id,
             'failure_reason' => $mpPayment?->status_detail ?? 'unknown',
         ]);
+
+        $payment->ticket->update(['status' => 'cancelled']);
 
         return redirect()
             ->route('payment.cancelled')
